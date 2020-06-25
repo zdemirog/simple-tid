@@ -1,0 +1,8 @@
+# Macro file for example B1 test
+
+/run/initialize
+
+/run/printProgress 500000
+/run/beamOn 5000000
+
+

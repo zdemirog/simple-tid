@@ -1,0 +1,76 @@
+images
+
+# random seed files
+G4Master_run*.rndm
+G4Worker?_run*.rndm
+G4Worker?_run*evt*.rndm
+run*evt*.rndm
+currentEvent.rndm
+currentRun.rndm
+
+# output from createHTML
+_remoll_*.html
+
+# Jupyter checkpoints
+.ipynb_checkpoints
+
+# backups etc
+*~
+*.swp
+
+# Mac
+*.DS_Store
+
+#ignore doxygen files for now
+Doxygen
+
+#ignore libraries and helper files
+*.so
+*.d
+
+#ignore output files
+*.root
+*.out
+*.pdf
+*.log
+*.dot
+*.lst
+
+#ignore kdev files
+*.kdev4
+
+#install directories
+bin
+lib
+lib64
+share
+
+#ignore build, output and map directory
+build*
+bldXcode
+map_directory
+output
+
+#ignore rad_dose radiation analysis work (another repository on sbujlab github)
+rad_analysis
+
+#ignore log files directory
+log
+
+#ignore project files for eclipse
+.cproject
+.project
+.settings
+
+#ignore build type file
+.buildtype
+
+#ignore dot files
+*.dot
+
+#sample_gdml output
+sample_gdml.*
+
+#ignore log files
+*.log
+callgrind.*
