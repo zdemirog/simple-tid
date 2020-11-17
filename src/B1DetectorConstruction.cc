@@ -40,8 +40,13 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4double world_sizeXY = 2*cm;
   G4double world_sizeZ  = 20*cm;
   G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
-  G4Material* SiO2 = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-  G4Material* Pb = nist->FindOrBuildMaterial("G4_Pb");
+  G4Material* tgtMat = nist->FindOrBuildMaterial("G4_VITON");
+  G4Material* shieldMat = nist->FindOrBuildMaterial("G4_Al");
+  G4double shieldThickness = 2*cm;
+
+  // G4Material* tgtMat = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
+  // G4Material* shieldMat = nist->FindOrBuildMaterial("G4_Pb");
+  //G4double shieldThickness = 5*cm;
   
   G4Box* solidWorld =    
     new G4Box("World",                       //its name
@@ -64,7 +69,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   G4Box* solidSh =    
     new G4Box("solidSh",                    //its name
-	      0.5*2*cm, 0.5*2*cm, 0.5*5*cm); //its size
+	      0.5*2*cm, 0.5*2*cm, 0.5*shieldThickness); //its size
                      
   G4Box* solidFB =    
     new G4Box("solidFB",                    //its name
@@ -75,19 +80,19 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   G4LogicalVolume* logicSh =                         
     new G4LogicalVolume(solidSh,            //its solid
-                        Pb,             //its material
+                        shieldMat,             //its material
                         "logicSh");         //its name
   G4LogicalVolume* logicF =                         
     new G4LogicalVolume(solidFB,            //its solid
-                        SiO2,             //its material
+                        tgtMat,             //its material
                         "logicF");         //its name
   G4LogicalVolume* logicB =                         
     new G4LogicalVolume(solidFB,            //its solid
-                        SiO2,             //its material
+                        tgtMat,             //its material
                         "logicB");         //its name
   G4LogicalVolume* logicMid =
     new G4LogicalVolume(solidMid,            //its solid
-                        SiO2,             //its material
+                        tgtMat,             //its material
                         "logicMid");         //its name
 
   new G4PVPlacement(0,                       //no rotation

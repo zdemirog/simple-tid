@@ -21,14 +21,15 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()
 
   // default particle kinematic
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  const int proc = 2;
+  const int proc = 3;
   G4String particleName[4]={"gamma","e-","e+","neutron"};
   const G4String hNm[4]={"g","em","ep","n"};
   G4ParticleDefinition* particle = particleTable->FindParticle(particleName[proc]);
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(6.*MeV);
-  fin=TFile::Open("./beamGeoV2_radAnaV5.root","READ");
+  //fin=TFile::Open("./beamGeoV2_radAnaV5.root","READ");
+  fin=TFile::Open("./tgtFlangeRadLevelV0.root","READ");
   if(fin){
     fin->ls();
   }else{
@@ -36,7 +37,12 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()
     exit(0);
   }
 
-  hE=(TH1F*)fin->Get(Form("det28/d28_energy_R7_%s_allPZ",hNm[proc].data()));
+  //hE=(TH1F*)fin->Get(Form("det28/d28_energy_R7_%s_allPZ",hNm[proc].data()));
+  TH1F *hUS=(TH1F*)fin->Get(Form("det5530/d5530_energyUS_allPZ_%s",hNm[proc].data()));
+  TH1F *hDS=(TH1F*)fin->Get(Form("det5530/d5530_energyDS_allPZ_%s",hNm[proc].data()));
+  hE=(TH1F*)hUS->Clone(Form("%s_USDS",hUS->GetName()));
+  hE->Add(hDS);
+  hE->SetTitle(Form("%s + DS",hE->GetTitle()));
   assert(hE);
   G4cout<<"Using "<<hE->GetTitle()<<G4endl;
   if(!hE){
