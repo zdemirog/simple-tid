@@ -37,6 +37,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   //     
   // World
+  //
+  // G4double world_sizeXY = 1640*cm;
+  // G4double world_sizeZ  = 1640*cm;
   G4double world_sizeXY = 2000*cm;
   G4double world_sizeZ  = 1800*cm;
   G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
@@ -79,15 +82,14 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                      
   G4Box* solidFB =    
     new G4Box("solidFB",                    //its name
+	      //      0.5*2*cm, 0.5*2*cm, 0.5*1*mm); //its size
 	      0.5*5*1320*mm, 0.5*2.5*1320*mm, 0.5*1*mm); //its size
-
-  G4Box* solidMid =
+  G4Box* solidMid =    
     new G4Box("solidMid",                    //its name
+	      //  0.5*2*cm, 0.5*2*cm, 0.5*1*cm); //its size
 	      0.5*5*1320*mm, 0.5*2.5*1320*mm, 0.5*2*660*mm); //its size
     
-  G4Box* solidSub =
-    new G4Box("solidSub",                     //its name
-          0.5*6.35*mm, 0.5*2.5*1322*mm,  0.5*2*662*mm); //its size
+  G4Box* solidSub = new G4Box("solidSub", 0.5*6.35*mm, 0.5*2.5*1322*mm,  0.5*2*662*mm);
 
     
   // G4LogicalVolume* logicSh =

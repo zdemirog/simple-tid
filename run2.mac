@@ -1,0 +1,39 @@
+# Macro file for example B1
+# 
+# To be run preferably in batch, without graphics:
+# % exampleB1 run2.mac
+#
+#/run/numberOfThreads 4
+/run/initialize
+#
+#/control/verbose 2
+#/run/verbose 2
+#
+# gamma 6 MeV to the direction (0.,0.,1.)
+# 10000 events
+#
+#/gun/particle gamma
+#/gun/energy 600 MeV
+#
+/run/printProgress 100
+/B1/generator/beam_dphmin 0 rad
+/B1/generator/beam_dphmax 6.28 rad
+/B1/generator/beam_dthmin -5 deg
+/B1/generator/beam_dthmax 5 deg
+/B1/generator/beam_x0min 0 cm
+/B1/generator/beam_x0max 0 cm
+/B1/generator/beam_y0min 0 cm
+/B1/generator/beam_y0max 0 cm
+/B1/generator/beam_z0 200 cm
+#/B1/generator/beam_z0 900 cm
+
+/run/beamOn 5000000
+
+# 
+# proton 210 MeV to the direction (0.,0.,1.)
+# 1000 events
+#
+#/gun/particle proton
+#/gun/energy 210 MeV
+#
+#/run/beamOn 1000

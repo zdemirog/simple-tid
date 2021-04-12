@@ -1,7 +1,7 @@
 #include "B1RunAction.hh"
 #include "B1PrimaryGeneratorAction.hh"
 #include "B1DetectorConstruction.hh"
-// #include "B1Run.hh"
+#include "B1HistoManager.hh"
 
 #include "G4RunManager.hh"
 #include "G4Run.hh"
@@ -13,8 +13,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1RunAction::B1RunAction(): 
-  G4UserRunAction(),
+B1RunAction::B1RunAction(HistoManager* histo):
+  G4UserRunAction(),fHistoManager(histo),
   fEdepF(0.),
   fEdepF2(0.),
   fEdepB(0.),
@@ -41,7 +41,7 @@ B1RunAction::B1RunAction():
   accumulableManager->RegisterAccumulable(fEdepB);
   accumulableManager->RegisterAccumulable(fEdepB2); 
   accumulableManager->RegisterAccumulable(fEdepM);
-  accumulableManager->RegisterAccumulable(fEdepM2); 
+  accumulableManager->RegisterAccumulable(fEdepM2);
 
 }
 
@@ -60,7 +60,9 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
-
+  // Open an output file
+  G4String fileName = "B1";
+  fHistoManager->Book(fileName);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -69,7 +71,7 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 {
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
-
+     
   // Merge accumulables 
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Merge();
@@ -90,7 +92,6 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
       edep2 = fEdepM2.GetValue();
     }
 
-    
     G4double rms = edep2 - edep*edep/nofEvents;
     if (rms > 0.) rms = std::sqrt(rms); else rms = 0.;  
     
@@ -100,7 +101,7 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     G4double mass = detectorConstruction->GetScoringVolume()[i]->GetMass();
     G4double dose = edep/mass;
     G4double rmsDose = rms/mass;
-
+      
     // Run conditions
     //  note: There is no primary generator action object for "master"
     //        run manager for multi-threaded mode.
@@ -140,9 +141,11 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     //  << "------------------------------------------------------------"
     //  << G4endl
     //  << G4endl;
-
-    G4cout << nofEvents << " " << dose/gray << " " << rmsDose/gray <<G4endl;
+    G4cout << "nofEvents: " <<nofEvents << ",runCondition: " << runCondition << ", dose/gray: " << dose/gray << " ,rmsDose/gray: " << rmsDose/gray <<G4endl;
+      
   }
+  fHistoManager->Save();
+
 }
   
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

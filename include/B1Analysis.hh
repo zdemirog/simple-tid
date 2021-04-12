@@ -24,53 +24,14 @@
 // ********************************************************************
 //
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
+/// \file He3Analysis.hh
+/// \brief Selection of the analysis technology
 
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "B1SteppingAction.hh"
-#include "B1HistoManager.hh"
+#ifndef B1Analysis_h
+#define B1Analysis_h 1
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#include "g4root.hh"
+//#include "g4cvs.hh"
+//#include "g4xml.hh"
 
-B1ActionInitialization::B1ActionInitialization()
-  : G4VUserActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-B1ActionInitialization::~B1ActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::BuildForMaster() const
-{
-  HistoManager*  histo = new HistoManager();
-
-  B1RunAction* runAction = new B1RunAction(histo);
-  SetUserAction(runAction);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::Build() const
-{
-  HistoManager*  histo = new HistoManager();
-
-  SetUserAction(new B1PrimaryGeneratorAction(histo));
-
-  B1RunAction* runAction = new B1RunAction(histo);
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction,histo);
-  SetUserAction(eventAction);
-  
-  //SetUserAction(new B1SteppingAction(eventAction,runAction,histo));
-  SetUserAction(new B1SteppingAction(eventAction,histo));
-}  
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#endif

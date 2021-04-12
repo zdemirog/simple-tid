@@ -23,54 +23,52 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file analysis/AnaEx01/include/HistoManager.hh
+/// \brief Definition of the HistoManager class
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
-
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "B1SteppingAction.hh"
-#include "B1HistoManager.hh"
-
+//
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-B1ActionInitialization::B1ActionInitialization()
-  : G4VUserActionInitialization()
-{}
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#ifndef B1HistoManager_h
+#define B1HistoManager_h 1
 
-B1ActionInitialization::~B1ActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::BuildForMaster() const
+#include <iostream>
+#include <map>
+#include <string>
+#include "globals.hh"
+#include "g4root.hh"
+//#include "g4csv.hh"
+//#include "g4xml.hh"
+#include "TAxis.h"
+#include "TH1.h"
+class HistoManager
 {
-  HistoManager*  histo = new HistoManager();
+  public:
+    HistoManager();
+   ~HistoManager();
 
-  B1RunAction* runAction = new B1RunAction(histo);
-  SetUserAction(runAction);
-}
+    void Book(G4String RootFileName);
+    void Save();
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+     void FillHisto(G4int id, G4double e, G4double weight = 1.0);
+     void Normalize(G4int id, G4double fac);
 
-void B1ActionInitialization::Build() const
-{
-  HistoManager*  histo = new HistoManager();
 
-  SetUserAction(new B1PrimaryGeneratorAction(histo));
+    void FillNtuple(std::map<G4int,std::map<G4int,G4double>> Ntuples);
 
-  B1RunAction* runAction = new B1RunAction(histo);
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction,histo);
-  SetUserAction(eventAction);
-  
-  //SetUserAction(new B1SteppingAction(eventAction,runAction,histo));
-  SetUserAction(new B1SteppingAction(eventAction,histo));
-}  
+    void FillNtupleEv(G4int evNr);
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+    // void PrintStatistic();
+
+    std::map<G4int,std::map<G4int,G4double>> Branches;
+
+    std::map<G4int,std::map<G4int,std::vector<G4double>>> hVolumes;
+
+    
+  private:
+    G4bool fFactoryOn;
+
+};
+
+#endif
