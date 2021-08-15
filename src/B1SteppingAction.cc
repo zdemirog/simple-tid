@@ -79,7 +79,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
   if(track->GetNextVolume() != 0){
     
      
-    if (prePV->GetName()=="front" && postPV->GetName() != "World" && postPoint->GetStepStatus() == fGeomBoundary) {
+      if (prePV->GetName()=="front" && postPV->GetName() != "World") {
       // leaving the volume front
       G4double preVol=0;
       G4double postVol=0;
@@ -100,27 +100,27 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
       Ntuples[0][1]  = track->GetDefinition()->GetPDGEncoding();
       Ntuples[0][2]  = track->GetTrackID();
       Ntuples[0][3]  = track->GetParentID();
-      Ntuples[0][4]  = postPoint->GetPosition().getX();
-      Ntuples[0][5]  = postPoint->GetPosition().getY();
-      Ntuples[0][6]  = postPoint->GetPosition().getZ();
-      Ntuples[0][7]  = postPoint->GetMomentum().getX();
-      Ntuples[0][8]  = postPoint->GetMomentum().getY();
-      Ntuples[0][9]  = postPoint->GetMomentum().getZ();
-      Ntuples[0][10] = postPoint->GetMomentumDirection().theta();
-      Ntuples[0][11] = postPoint->GetMomentumDirection().phi();
-      Ntuples[0][12] = postPoint->GetTotalEnergy();
-      Ntuples[0][13] = postPoint->GetKineticEnergy();
+      Ntuples[0][4]  = prePoint->GetPosition().getX();
+      Ntuples[0][5]  = prePoint->GetPosition().getY();
+      Ntuples[0][6]  = prePoint->GetPosition().getZ();
+      Ntuples[0][7]  = prePoint->GetMomentum().getX();
+      Ntuples[0][8]  = prePoint->GetMomentum().getY();
+      Ntuples[0][9]  = prePoint->GetMomentum().getZ();
+      Ntuples[0][10] = prePoint->GetMomentumDirection().theta();
+      Ntuples[0][11] = prePoint->GetMomentumDirection().phi();
+      Ntuples[0][12] = prePoint->GetTotalEnergy();
+      Ntuples[0][13] = prePoint->GetKineticEnergy();
       Ntuples[0][14] = step->GetStepLength();
       Ntuples[0][15] = preVol;
       Ntuples[0][16] = postVol;
 
       fHistoManager->FillNtuple(Ntuples);
       Ntuples.clear();
-    
+
     }
 
       
-    if (postPV->GetName() == "back" && prePoint->GetStepStatus() == fGeomBoundary) {
+    if (postPV->GetName() == "back") { //&& prePoint->GetStepStatus() == fGeomBoundary
       // entered the volume back, or within it
       G4double preVol=0;
       G4double postVol=0;
