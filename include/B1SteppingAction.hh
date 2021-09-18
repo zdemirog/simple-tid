@@ -28,8 +28,6 @@ private:
   G4double edepStep ;
   std::map<G4int,std::map<G4int,G4double>> Ntuples;
   HistoManager*  fHistoManager;
-  G4String  ParticleName;
-  G4int ParticlePDGcode;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

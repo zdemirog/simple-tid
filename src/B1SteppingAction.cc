@@ -120,9 +120,6 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
       fHistoManager->FillNtuple(Ntuples);
       Ntuples.clear();
           
-      ParticleName = track->GetDefinition()->GetParticleName();
-      ParticlePDGcode = track->GetDefinition()->GetPDGEncoding();
-
     }
 
       
