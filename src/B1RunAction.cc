@@ -63,6 +63,7 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   // Open an output file
   G4String fileName = "B1";
   fHistoManager->Book(fileName);
+  EnergyDeposit  = EnergyDeposit2  = 0.;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -90,6 +91,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     }else if(i==1){
       edep  = fEdepM.GetValue();
       edep2 = fEdepM2.GetValue();
+      EnergyDeposit = fEdepM.GetValue();
+      EnergyDeposit2 = fEdepM2.GetValue();
+
     }
 
     G4double rms = edep2 - edep*edep/nofEvents;
@@ -101,6 +105,19 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     G4double mass = detectorConstruction->GetScoringVolume()[i]->GetMass();
     G4double dose = edep/mass;
     G4double rmsDose = rms/mass;
+    G4double length2 = 132*cm;
+    G4double density2 = detectorConstruction->GetScoringVolume()[1]->GetMaterial()->GetDensity();
+    //total energy loss
+    EnergyDeposit /= nofEvents; EnergyDeposit2 /= nofEvents;
+    G4double rmsEdep = EnergyDeposit2 - EnergyDeposit*EnergyDeposit;
+    if(rmsEdep >0.)rmsEdep=std::sqrt(rmsEdep/nofEvents);
+    else rmsEdep =0;
+
+    // total energy loss
+    G4double meandEdx2  = EnergyDeposit/length2;
+    G4double stopPower2 = meandEdx2/density2;
+
+      
       
     // Run conditions
     //  note: There is no primary generator action object for "master"
@@ -142,6 +159,18 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     //  << G4endl
     //  << G4endl;
     G4cout << "nofEvents: " <<nofEvents << ",runCondition: " << runCondition << ", dose/gray: " << dose/gray << " ,rmsDose/gray: " << rmsDose/gray <<G4endl;
+    
+    if (i==1){  G4int prec = G4cout.precision(3);
+
+      G4cout << "\n Total energy deposit in " <<detectorConstruction->GetScoringVolume()[i]->GetName() <<" per event = "
+             << G4BestUnit(EnergyDeposit,"Energy")
+             << ", Material Name:" << detectorConstruction->GetScoringVolume()[i]->GetMaterial()->GetName() <<G4endl;
+             
+      G4cout << "\n -----> Mean dE/dx2 = " << meandEdx2/(MeV/cm) << " MeV/cm"
+             << "\t(" << stopPower2/(MeV*cm2/g) << " MeV*cm2/g)"
+             << G4endl;
+             
+      G4cout.precision(prec);}
       
   }
   fHistoManager->Save();

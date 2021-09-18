@@ -32,8 +32,9 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction(HistoManager* histo)
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(6.*MeV);
-  //fin=TFile::Open("./beamGeoV2_radAnaV5.root","READ");
-  fin=TFile::Open("../../../../fromGeantExamples/B1/tgtShld_conf4_tgtShldAnaV0.root","READ");
+  fin=TFile::Open("./rootfiles/shieldConf13_hybridAnaV1hut2.root","READ");
+
+    
   if(fin){
     fin->ls();
   }else{
@@ -41,15 +42,10 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction(HistoManager* histo)
     exit(0);
   }
 
-  //hE=(TH1F*)fin->Get(Form("det28/d28_energy_R7_%s_allPZ",hNm[proc].data()));
-  hSBS=(TH1F*)fin->Get(Form("det5510/d5510__energy_allPZ_%s",hNm[proc].data()));
-  // TH1F *hDS=(TH1F*)fin->Get(Form("det5547/d5547__energy_allPZ_%s",hNm[proc].data()));
-  // hE=(TH1F*)hSBS->Clone(Form("%s_USDS",hSBS->GetName()));
-  // hE->Add(hDS);
-  // hE->SetTitle(Form("%s + DS",hE->GetTitle()));
-  //assert(hE);
-  G4cout<<"Using "<<hSBS->GetTitle()<<G4endl;
-  if(!hSBS){
+  hfPS=(TH1F*)fin->Get(Form("det5840/d5840__energy_allPZ_%s",hNm[proc].data()));
+
+  G4cout<<"Using "<<hfPS->GetTitle()<<G4endl;
+  if(!hfPS){
     G4cout<<"can't find histo"<<G4endl;
     exit(0);
   }
@@ -84,10 +80,12 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction(HistoManager* histo)
 
 B1PrimaryGeneratorAction::~B1PrimaryGeneratorAction()
 {
+ 
   fin->Close();
   delete fin;
   delete fParticleGun;
   delete fMessenger;
+  
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -105,13 +103,14 @@ void B1PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4double randomY = std::sin(theta)*std::sin(phi);
   G4double randomZ = std::cos(theta);
 
-  G4double energy = hSBS->GetRandom()*MeV;
+  G4double energy = hfPS->GetRandom()*MeV;
   fParticleGun->SetParticleEnergy(energy);
   fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(randomX,randomY,randomZ));
   fParticleGun->GeneratePrimaryVertex(anEvent);
   
-  fHistoManager->FillHisto(0, energy);
+  benergy=energy;
+  fHistoManager->FillHisto(0, benergy);
 
 }
 

@@ -7,6 +7,9 @@
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 #include "G4LogicalVolume.hh"
+#include "TFile.h"
+#include "TTree.h"
+#include "TBranch.h"
 #include "G4Gamma.hh"
 #include "G4Neutron.hh"
 #include <sstream>
@@ -44,7 +47,7 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
 {
   /// Get Event Number
   evNr = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
-    
+   
   if (fScoringVolume.size()==0) { 
     const B1DetectorConstruction* detectorConstruction
       = static_cast<const B1DetectorConstruction*>
@@ -66,10 +69,10 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
 
   //G4Material* material = volume->GetMaterial();
   G4int found = -1;
+
   for(unsigned long i=0;i<fScoringVolume.size();i++)
     if(volume == fScoringVolume[i])
       found = i;
-
   // check if we are in scoring volume
   if (found==-1) return;
   // collect energy deposited in this step
@@ -78,7 +81,6 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
  
   if(track->GetNextVolume() != 0){
     
-     
       if (prePV->GetName()=="front" && postPV->GetName() != "World") {
       // leaving the volume front
       G4double preVol=0;
@@ -114,13 +116,17 @@ void B1SteppingAction::UserSteppingAction(const G4Step* step)
       Ntuples[0][15] = preVol;
       Ntuples[0][16] = postVol;
 
+          
       fHistoManager->FillNtuple(Ntuples);
       Ntuples.clear();
+          
+      ParticleName = track->GetDefinition()->GetParticleName();
+      ParticlePDGcode = track->GetDefinition()->GetPDGEncoding();
 
     }
 
       
-    if (postPV->GetName() == "back") { //&& prePoint->GetStepStatus() == fGeomBoundary
+    if (postPV->GetName() == "back" ) {//&& postPoint->GetStepStatus() == fGeomBoundary
       // entered the volume back, or within it
       G4double preVol=0;
       G4double postVol=0;

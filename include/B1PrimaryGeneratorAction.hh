@@ -7,6 +7,7 @@
 #include "B1Analysis.hh"
 #include <TFile.h>
 #include "TH1F.h"
+#include "TTree.h"
 #include "TFile.h"
 
 class G4ParticleGun;
@@ -37,13 +38,14 @@ private:
   HistoManager*  fHistoManager;
   G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
   TFile *fin;
-  TH1F *hSBS;
+  TH1F *hfPS;
   G4GenericMessenger* fMessenger;
   G4double totenergy ;
   G4double fEnergy;
   G4double fX0min,fX0max, fY0min,fY0max, fZ0;
   G4double fdThmin, fdThmax;
   G4double fdPhmin, fdPhmax;
+  G4double benergy;
 
 };
 

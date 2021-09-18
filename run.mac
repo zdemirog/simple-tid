@@ -24,8 +24,8 @@
 /B1/generator/beam_x0max 0 cm
 /B1/generator/beam_y0min 0 cm
 /B1/generator/beam_y0max 0 cm
-/B1/generator/beam_z0 200 cm
-#/B1/generator/beam_z0 900 cm
+#/B1/generator/beam_z0 200 cm
+/B1/generator/beam_z0 900 cm
 
 /run/beamOn 5000000
 

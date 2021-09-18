@@ -1,5 +1,4 @@
 #include "B1DetectorConstruction.hh"
-
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4Box.hh"
@@ -10,7 +9,6 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4SubtractionSolid.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -30,7 +28,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 {  
   // Get nist material manager
   G4NistManager* nist = G4NistManager::Instance();
-  
+
   // Option to switch on/off checking of volumes overlaps
   //
   G4bool checkOverlaps = true;
@@ -40,18 +38,8 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4double world_sizeXY = 2000*cm;
   G4double world_sizeZ  = 1800*cm;
   G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
-  G4Material* tgtMat = nist->FindOrBuildMaterial("G4_Fe");
+  G4Material* tgtMat = nist->FindOrBuildMaterial("G4_CONCRETE");
   G4Material* fbMat = nist->FindOrBuildMaterial("G4_Galactic");
-  //G4Material* shieldMat = nist->FindOrBuildMaterial("G4_Al");
-  //G4double shieldThickness = 100*cm;
-  //G4double IronBlock_x = 1320*mm;
-  //G4double IronBlock_y = 1320*mm;
-  //G4double IronBlock_z = 660*mm;
-  // G4double shieldThickness = 2*cm;
-
-  // G4Material* tgtMat = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
-  // G4Material* shieldMat = nist->FindOrBuildMaterial("G4_Pb");
-  //G4double shieldThickness = 5*cm;
   
   G4Box* solidWorld =    
     new G4Box("World",                       //its name
@@ -72,28 +60,14 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                       0,                     //copy number
                       checkOverlaps);        //overlaps checking
 
-  // G4Box* solidSh =
-  //   new G4Box("solidSh",                    //its name
-  //      0.5*2*cm, 0.5*2*cm, 0.5*shieldThickness); //its size
-  //            0.5*5*1320*mm,0.5*2.5*1320*mm, 0.5*shieldThickness); //its size
-                     
   G4Box* solidFB =    
     new G4Box("solidFB",                    //its name
-	      0.5*5*1320*mm, 0.5*2.5*1320*mm, 0.5*1*mm); //its size
-
-  G4Box* solidMid =
+	      0.5*11249.914*mm, 0.5*5715*mm, 0.5*1*mm); //its size
+    
+  G4Box* solidMid =    
     new G4Box("solidMid",                    //its name
-	      0.5*5*1320*mm, 0.5*2.5*1320*mm, 0.5*2*660*mm); //its size
-    
-  G4Box* solidSub =
-    new G4Box("solidSub",                     //its name
-          0.5*6.35*mm, 0.5*2.5*1322*mm,  0.5*2*662*mm); //its size
+	      0.5*11249.914*mm, 0.5*5715*mm, 0.5*1400*mm); //its size
 
-    
-  // G4LogicalVolume* logicSh =
-  //  new G4LogicalVolume(solidSh,            //its solid
-  //                     shieldMat,             //its material
-  //                     "logicSh");         //its name
   G4LogicalVolume* logicF =                         
     new G4LogicalVolume(solidFB,            //its solid
                         fbMat,             //its material
@@ -102,27 +76,13 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     new G4LogicalVolume(solidFB,            //its solid
                         fbMat,             //its material
                         "logicB");         //its name
-    
-  G4SubtractionSolid *logicSub = new G4SubtractionSolid("logicSub", solidMid, solidSub);
-    
   G4LogicalVolume* logicMid =
-    new G4LogicalVolume(logicSub,            //its solid
-			tgtMat,             //its material
-			"logicMid");         //its name
-
-
-    
-  //new G4PVPlacement(0,                       //no rotation
-  //                 G4ThreeVector(0,0,-4*cm),//      G4ThreeVector(0,0,-3700*mm),
-  //                 logicSh,                //its logical volume
-  //                 "shield",              //its name
-  //                 logicWorld,              //its mother  volume
-  //                 false,                   //no boolean operation
-  //                 0,                       //copy number
-  //                    checkOverlaps);          //overlaps checking
+    new G4LogicalVolume(solidMid,            //its solid
+                        tgtMat,             //its material
+                        "logicMid");         //its name
  
   new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(0,0,-660.5*mm),//     G4ThreeVector(0,0,-5.5*mm),
+                    G4ThreeVector(0,0,-700.5*mm),//     G4ThreeVector(0,0,-5.5*mm),
                     logicF,                //its logical volume
                     "front",              //its name
                     logicWorld,              //its mother  volume
@@ -131,7 +91,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                     checkOverlaps);          //overlaps checking
  
   new G4PVPlacement(0,                       //no rotation
-                    G4ThreeVector(0,0,660.5*mm),//    G4ThreeVector(0,0,5.5*mm),
+                    G4ThreeVector(0,0,700.5*mm),//    G4ThreeVector(0,0,5.5*mm),
                     logicB,                //its logical volume
                     "back",              //its name
                     logicWorld,              //its mother  volume
@@ -147,7 +107,8 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                     false,                   //no boolean operation
                     0,                       //copy number
                     checkOverlaps);          //overlaps checking
-        
+ 
+                
   // Set Shapes as scoring volumes
   fScoringVolume.push_back(logicF);
   fScoringVolume.push_back(logicMid);

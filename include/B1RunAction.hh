@@ -89,6 +89,9 @@ private:
   std::vector<G4double> fPostKE;
   std::vector<G4String> fPostVolumeName;
 
+  G4double EnergyDeposit,  EnergyDeposit2;
+  G4double NonIonEnergyDeposit,  NonIonEnergyDeposit2;
+    
 };
 
 #endif

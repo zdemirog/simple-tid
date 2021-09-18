@@ -4,7 +4,6 @@
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
 #include <vector>
-
 class B1EventAction;
 class B1RunAction;
 class HistoManager;
@@ -29,7 +28,8 @@ private:
   G4double edepStep ;
   std::map<G4int,std::map<G4int,G4double>> Ntuples;
   HistoManager*  fHistoManager;
-
+  G4String  ParticleName;
+  G4int ParticlePDGcode;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

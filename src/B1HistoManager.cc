@@ -62,7 +62,6 @@ void HistoManager::Book(G4String fileName)
   analysisManager->SetNtupleDirectoryName("ntuples");
     
   // Open an output file
-  //
   G4bool fileOpen = analysisManager->OpenFile(fileName);
   if (! fileOpen) {
     G4cerr << "\n---> HistoManager::Book(): cannot open "
@@ -84,17 +83,10 @@ void HistoManager::Book(G4String fileName)
   for (int i = 0; i <= bins; i++) {new_bins.push_back(pow(10, from + i * width));}
   analysisManager->SetH1(0, new_bins);
 
-  // analysisManager->CreateH1("EdepM","Edep in VolumeM (MeV)", 100, 0., 800*MeV);
-  // analysisManager->CreateH1("EdepB","Edep in VolumeB (MeV)", 100, 0., 800*MeV);
-  // analysisManager->CreateH1("trackF","trackL in VolumeF (mm)", 100, 0., 1*m);
-  // analysisManager->CreateH1("trackM","trackL in VolumeM (mm)", 100, 0., 1*m);
-  // analysisManager->CreateH1("trackB","trackL in VolumeB (mm)", 100, 0., 1*m);
-
   // Create ntuples.
   // Ntuples ids are generated automatically starting from 0.
   // The start value can be changed by:
   // analysisManager->SetFirstMtupleId(1);
-  
   // Create ntuple (id = 0)
   analysisManager->CreateNtuple("SBSbunkerExitvF", "SBS Bunker Exits Front");
   analysisManager->CreateNtupleDColumn("ExitvF_evNr",hVolumes[0][0]);
@@ -135,8 +127,6 @@ void HistoManager::Book(G4String fileName)
   analysisManager->CreateNtupleDColumn("EntervB_prevolumes",hVolumes[1][15]);
   analysisManager->CreateNtupleDColumn("EntervB_postvolumes",hVolumes[1][16]);
   analysisManager->FinishNtuple();
-
-
         
   fFactoryOn = true;
 
@@ -220,30 +210,4 @@ void HistoManager::FillNtupleEv(G4int evNr){
 
   }
 }
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-/*void HistoManager::PrintStatistic()
-  {
-  if (! fFactoryOn) return;
-
-  G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-    
-  G4cout << "\n ----> print histograms statistic \n" << G4endl;
-  for ( G4int i=0; i<analysisManager->GetNofH1s(); ++i ) {
-  G4String name = analysisManager->GetH1Name(i);
-  G4H1* h1 = analysisManager->GetH1(i);
-    
-  G4String unitCategory;
-  if (name[0U] == 'E' ) unitCategory = "Energy";
-  if (name[0U] == 'L' ) unitCategory = "Length";
-  // we use an explicit unsigned int type for operator [] argument
-  // to avoid problems with windows compiler
-
-  G4cout << name
-  << ": mean = " << G4BestUnit(h1->mean(), unitCategory)
-  << " rms = " << G4BestUnit(h1->rms(), unitCategory )
-  << G4endl;
-  }
-  }*/
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
